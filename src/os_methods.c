@@ -1,6 +1,13 @@
 #include "../include/platform.h"
 #include "../include/os_methods.h"
 
+//Variables(Private) ============================================================================================
+#if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
+void InitTime();
+LARGE_INTEGER FPC; //Frequency Performance Counter.
+bool IsTimeMethodsInitialized;
+double RawTimeFrequency, MiliTimeFrequency, MicroTimeFrequency, NanoTimeFrequency;
+#endif
 
 //Internal Methods ==============================================================================================
 #if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
@@ -13,10 +20,11 @@ long long GetTimestampMicroseconds(long long Timestamp) { return (long long)((do
 long long GetTimestampNanoseconds(long long Timestamp) { return (long long)((double)Timestamp / NanoTimeFrequency); }
 
 //Window Methods.
-void Win_HideWindowInTaskbar(GLFWwindow* win) { glfwHideWindow(win); SetWindowLong(glfwGetWin32Window(win), GWL_EXSTYLE, WS_EX_TOOLWINDOW); glfwShowWindow(win); }
+void Win_HideWindowInTaskbar(void* win) { glfwHideWindow(win); SetWindowLong(glfwGetWin32Window(win), GWL_EXSTYLE, WS_EX_TOOLWINDOW); glfwShowWindow(win); }
 #elif
 //Timing Methods.
 #include <time.h>
+void InitTime() { }
 long long GetCurrentTimestamp() { struct timespec Counter; clock_gettime(CLOCK_REALTIME, &Counter); return (Counter.tv_sec * 1000000000LL) + Counter.tv_nsec; }
 long long GetTimestampSeconds(long long Timestamp) { return (long long)((double)Timestamp / 1000000000.0); }
 long long GetTimestampMiliseconds(long long Timestamp) { return (long long)((double)Timestamp / 1000000.0); }

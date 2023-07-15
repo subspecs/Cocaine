@@ -1,5 +1,16 @@
 #pragma once
+#if defined(CocaineCompile)
 #include "platform.h"
+#endif
+
+//Very helpful defines.
+#define false 0
+#define true 1
+typedef int bool;
+typedef unsigned char byte;
+
+//Work Constants.
+#define MaxProgramShaderSourceSize 512 * 1024 //512kb.
 
 //Function Pointers =============================================================================================
 void (*OnShaderCompileError)(const char* Error);
@@ -11,17 +22,9 @@ void (*OnGLFWError)(const char* ErrorName, const char* FunctionName, const char*
 typedef struct Bit256Block { int i1, i2, i3, i4, i5, i6, i7, i8; } Bit256Block;
 
 
-//Variables(Private) ============================================================================================
-#if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
-void InitTime();
-LARGE_INTEGER FPC; //Frequency Performance Counter.
-bool IsTimeMethodsInitialized;
-double RawTimeFrequency, MiliTimeFrequency, MicroTimeFrequency, NanoTimeFrequency;
-#endif
-
-
 //Internal Methods ==============================================================================================
-void Win_HideWindowInTaskbar(GLFWwindow* win);
+void InitTime();
+void Win_HideWindowInTaskbar(void* win);
 
 
 //Public Methods ================================================================================================

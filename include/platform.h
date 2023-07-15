@@ -1,5 +1,7 @@
 #pragma once
+#if defined(CocaineCompile)
 #define DEBUG
+#endif
 
 //Default Includes.
 #define GLFW_INCLUDE_NONE //Forces GLFW to use GLAD.
@@ -8,15 +10,6 @@
 #include <stdio.h>
 #endif
 #include <stdlib.h>
-
-//Very helpful defines.
-#define false 0
-#define true 1
-typedef int bool;
-typedef unsigned char byte;
-
-//Work Constants.
-#define MaxProgramShaderSourceSize 512 * 1024 //512kb.
 
 //Platform Specific.
 #if defined(Cocaine_Win_64)

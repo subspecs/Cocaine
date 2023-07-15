@@ -2,21 +2,21 @@
 #include "include/gpu_methods.h"
 #include "include/os_methods.h"
 
-const char* ShaderCode = //Sample shader code for work.
+const char* ShaderCode = //Sample compute shader code for work.
 "#version 430\n"
 "layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;\n"
-"layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n"
-"layout(std430, binding = 1) buffer TestName2 { float BufferB[]; };\n"
-"layout(std430, binding = 2) buffer TestName3 { float BufferC[]; };\n"
+"layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n" //Here we define our GPU Buffer A that we created using MemoryA memory buffer.
+"layout(std430, binding = 1) buffer TestName2 { float BufferB[]; };\n" //Here we define our GPU Buffer B that we created using MemoryB memory buffer.
+"layout(std430, binding = 2) buffer TestName3 { float BufferC[]; };\n" //Here we define our GPU Buffer B that we left NULL so it creates and empty buffer.
 
-"unsigned int JobIndex = (gl_GlobalInvocationID.x * (gl_NumWorkGroups.y * gl_NumWorkGroups.z)) + (gl_GlobalInvocationID.y * gl_NumWorkGroups.z) + gl_GlobalInvocationID.z;\n"
+"unsigned int JobIndex = (gl_GlobalInvocationID.x * (gl_NumWorkGroups.y * gl_NumWorkGroups.z)) + (gl_GlobalInvocationID.y * gl_NumWorkGroups.z) + gl_GlobalInvocationID.z;\n" //A small piece of code that calculates where/which shader unit is at in the job/work count. (Array index essentially.)
 
 "void main()\n"
 "{\n"
-"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n"
+"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n" //Meth.
 "}\n";
 
-long long TestSize = 550000000; //The amount of variables to create.
+long long TestSize = 550000000; //The amount of variables to create. (Make sure you have 3x(4 bytes x TestSize) amount of RAM and GPU VRAM.)
 long long TestSizeBufferByteCount; //The amount of bytes these variable will consume.
 
 void SetBufferValues(float* Buffer, int Length, float Value) { int n = 0; while(n < Length) { Buffer[n] = Value; n++; } }

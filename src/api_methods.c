@@ -78,7 +78,7 @@ bool CompileProgram(const char* const* ShaderCode, GLuint* OutProgram)
 	return IsCompiled; //Return compile status.
 }
 //Load a ComputeProgram from memory.
-bool LoadComputeProgram(unsigned char* Buffer, int Count, GLuint* Program)
+bool LoadComputeProgram(unsigned char* Buffer, int Count, unsigned int* Program)
 {
 	if(*Buffer == 1)
 	{
@@ -100,7 +100,7 @@ bool LoadComputeProgram(unsigned char* Buffer, int Count, GLuint* Program)
 	}
 }
 //Save a ComputeProgram to memory.
-int SaveComputeProgram(GLuint Program, unsigned char* Buffer)
+int SaveComputeProgram(unsigned int Program, unsigned char* Buffer)
 {
 	if(GL_NUM_PROGRAM_BINARY_FORMATS > 0)
 	{
@@ -125,7 +125,7 @@ void SetActiveGPUContext(GPUDevice* Device)
 	CheckLogError(true, NULL, "SetActiveGPUContext"); //Error Check.
 }
 //Will run the currently active Compute Program on the CURRENTLY ACTIVE GPU context on the CALLING THREAD. Note: The 'Device' param is only used for limit calcualtions and NOT for the actual compute. (In-case you thought you can slap a random GPU context here.)
-bool RunComputeProgram(GLuint Program, GPUDevice* Device, long long ProcessCount, bool PreciseCycleCount)
+bool RunComputeProgram(unsigned int Program, GPUDevice* Device, long long ProcessCount, bool PreciseCycleCount)
 {
 	glLinkProgram(Program); //Link shader program to the current GPU context.
 	glUseProgram(Program); //Register the shader program for use with the current GPU context.

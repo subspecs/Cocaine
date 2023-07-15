@@ -1,9 +1,8 @@
 #pragma once
-#include "platform.h"
 #include "os_methods.h"
 
 //Structs =======================================================================================================
-typedef struct GPUDevice { GLFWwindow* GPUContext; GLFWmonitor* GPUMonitor; char* DisplayName; int WorkGroupLimits[3]; } GPUDevice; //A simple holder for a GPU device.
+typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; int WorkGroupLimits[3]; } GPUDevice; //A simple holder for a GPU device.
 
 //Variables(Private) ============================================================================================
 int GPUCount;

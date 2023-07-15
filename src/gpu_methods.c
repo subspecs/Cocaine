@@ -8,7 +8,7 @@ bool IsGladLoaded, IsInitialized;
 //Internal Methods ==============================================================================================
 
 //Creates an OpenGL context for that specific GPU connected on that specific monitor.
-bool CreateContext(GLFWmonitor* GPU, GLFWwindow** Window)
+bool CreateContext(void* GPU, void** Window)
 {
 #if !defined(Cocaine_GLES)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //Sets the OpenGL version(4.3). 
@@ -56,7 +56,7 @@ bool CreateContext(GLFWmonitor* GPU, GLFWwindow** Window)
 	return *Window != NULL; //Check if any error has occured.
 }
 //Get GPU/Renderer names of already created contexts. WARNING: Use this BEFORE you do any work on the GPUs or BEFORE creating their associated threads.
-char** GetGPUMonitors(GLFWwindow** GPUContexts, const int Count)
+char** GetGPUMonitors(void** GPUContexts, const int Count)
 {
 	void* OGContext = glfwGetCurrentContext(); //Get the calling threads GPU context if any.
 	char** Names = malloc(sizeof(void*) * Count); //Allocated the pointers needed for each char array.
@@ -150,9 +150,7 @@ void Initialize()
 {
 	if(!IsInitialized)
 	{
-#if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
 		InitTime(); //Initialize Timing Methods. (Windows Only)
-#endif
 		if (!glfwInit()) { CheckLogError(true, NULL, "Initialize"); exit(EXIT_FAILURE); } //Initialize library if haven't already.
 		GPUDevices = NULL; GPUCount = GetCurrentGPUDevices(&GPUDevices); //Create and get GPUs and their contexts.
 
