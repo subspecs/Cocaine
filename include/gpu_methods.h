@@ -1,0 +1,40 @@
+#pragma once
+#include "platform.h"
+#include "os_methods.h"
+
+//Structs =======================================================================================================
+typedef struct GPUDevice { GLFWwindow* GPUContext; GLFWmonitor* GPUMonitor; char* DisplayName; int WorkGroupLimits[3]; } GPUDevice; //A simple holder for a GPU device.
+
+//Variables(Private) ============================================================================================
+int GPUCount;
+GPUDevice* GPUDevices;
+
+
+//Internal Methods ==============================================================================================
+
+
+//Public Methods =================================================================================================
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//Initialize the library.
+void Initialize();
+//Refreshes the GPU list.
+void RefreshGPUList();
+//Release all resources held by the library.
+void ReleaseResources();
+
+//Initializes the GPU context on the calling thread.
+void CreateGPUContext(GPUDevice* Device);
+//Disposes the GPU context on the calling thread.
+void DisposeGPUContext(GPUDevice* Device);
+
+
+//Gets the Raw GPUDevices pointer.
+int GetRawGPUDevices(GPUDevice** OutDevices);
+
+#ifdef __cplusplus
+}
+#endif
