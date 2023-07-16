@@ -16,11 +16,15 @@ Meaning this thing works on toasters/solitaire/potato/trashcan machines that wer
 <sub>*Some SOCs and GPUs like ATI/AMD/Intel didn't bother to update their API levels, tho a very small portion of them.</sub>
 
 ### So, how does one use it?
-Pretty simple really, here's an windows x64 example:<br>
-1) Look at the example [here]().
-2) The only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
-That is it, make sure the example file can find them.
-3) Make sure that **Cocaine.dll** and **glfw3.dll** are next to the compiled executable.
+For a simple multi-platform solution, there is a [Cocaine .NET]() wrapper.(COMING SOON!)<br>
+For what I am using, here's an windows x64 example:<br>
+1) Look at the example [here](https://github.com/subspecs/Cocaine/blob/master/examples/basicexample.c).
+2) a) If you're going to link a **static library(.lib/.a)** then the only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
+b) If you're going to link/load against a **dynamic library(.dll)**, then you only need the **Cocaine.dll** and **glfw3.dll** files in the same directory as the executable.<br>
+
+**That's it!**<br>
+For what **methods** are available, their **documentation** and **signatures** are available at the wiki(SOON).<br>
+There are also comments on mostly everything**.
 
 ### So, how does one compile it?
 Personally I use windows 10, so I compile this with mingw64.<br>
@@ -31,3 +35,7 @@ You can check the latest compile arguments I use [here](https://github.com/subsp
 ```
 gcc -DCocaine_Win_64 -DCocaineCompile "src/glad/gl.c" "src/os_methods.c" "src/gpu_methods.c" "src/api_methods.c" -L "lib/Win/x64" -lglfw3dll -fPIC -shared -O3 -o "outputs/Cocaine.dll"
 ```
+
+### **Want to [help me](https://www.patreon.com/subspecs) pay off my therapist? Might make updates more frequent!**
+
+
