@@ -49,11 +49,17 @@ bool CreateContext(void* GPU, void** Window)
 #endif
 		if(!IsGladLoaded) { CheckLogError(true, "Error loading glad! (Is at least one GPU context loaded?)", "CreateContext"); return false; } 
 	} //Tries to load GLAD, this is needed for anything related to this API.
+	glfwSetWindowMonitor(*Window, NULL, 0, 0, 128, 128, GLFW_DONT_CARE); //Brings this window back to windowed mode.
+	glfwSetWindowSize(*Window, 128, 128); //Sets the windows new size.
+	glfwPollEvents(); //Waits a bit so the all the window transformation events are done.
 #if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
 	Win_HideWindowInTaskbar(*Window); //Hides the window in the taskbar. (Windows 10+ bug.)
 	SetWindowPos(glfwGetWin32Window(*Window), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); //Set this window to be at the utmost back of the desktop.
 	SetForegroundWindow(CurrentForegroundWindow); //Set back the last focused window. (This because creating a new window will focus on it, since it's invisible that would softlock the entire destop, so either this or ATL-TAB fixes it.)
 #endif
+	glfwPollEvents(); //Waits a bit so the all the window transformation events are done.
+	glfwHideWindow(*Window); //Hides the window.
+	glfwPollEvents(); //Waits a bit so the all the window transformation events are done.
 	CheckLogError(true, NULL, "CreateContext"); //Check for errors.
 	return *Window != NULL; //Check if any error has occured.
 }
@@ -102,7 +108,7 @@ int GetCurrentGPUDevices(GPUDevice** GPUDevices)
 			{
 				if(x != n && strcmp(Devices[x].DisplayName, Devices[n].DisplayName) == 0) //Check if currently existing GPUs match the current one and ommit it if it does. (GPU dual+ monitor?)
 				{ 
-					glfwWaitEvents(); //Process ANY events for the GPU Context.
+					glfwPollEvents(); //Process ANY events for the GPU Context.
 					glfwSetWindowShouldClose(Devices[n].GPUContext, true); //Flag the GPUContext for deletion.
 					glfwDestroyWindow(Devices[n].GPUContext); //Delete GPUContext.
 					Devices[n].GPUContext = NULL; //Set it to NULL so we can sort it out later.
@@ -124,9 +130,9 @@ int GetCurrentGPUDevices(GPUDevice** GPUDevices)
 
 			glfwMakeContextCurrent(Devices[x].GPUContext); //Make the context current so we can read GPU values.
 
-			glfwWaitEvents(); //Process ANY events for the GPU Context.
+			glfwPollEvents(); //Process ANY events for the GPU Context.
 			glfwSetWindowShouldClose(Devices[x].GPUContext, true); //Flag the GPUContext for deletion.
-			glfwWaitEvents(); //Process ANY events for the GPU Context.
+			glfwPollEvents(); //Process ANY events for the GPU Context.
 			glfwDestroyWindow(Devices[x].GPUContext); //Delete GPUContext.
 			CheckLogError(true, NULL, "GetCurrentGPUDevices"); //Check for errors.
 			
@@ -163,7 +169,7 @@ void Initialize()
 //Release all resources held by the library.
 void ReleaseResources()
 {
-	glfwWaitEvents(); //Process window events for all gpu contexts.
+	glfwPollEvents(); //Process window events for all gpu contexts.
 	glfwTerminate(); //Release all GL resources.
 }
 //Refreshes the GPU list. WARNING: Dispose ALL open GPU contexts BEFORE calling this!
@@ -174,7 +180,7 @@ void RefreshGPUList()
 	GPUCount = GetCurrentGPUDevices(&GPUDevices); //Create and get GPUs and their contexts.
 }
 
-//Initializes the GPU context on the calling thread.
+//Initializes the GPU context on the MAIN thread.
 void CreateGPUContext(GPUDevice* Device)
 {
 	if(Device->GPUContext == NULL)
@@ -186,15 +192,15 @@ void CreateGPUContext(GPUDevice* Device)
 	}
 	CheckLogError(true, NULL, "CreateGPUContext"); 
 }
-//Disposes the GPU context on the calling thread.
+//Disposes the GPU context on the MAIN thread.
 void DisposeGPUContext(GPUDevice* Device)
 {
 	if(Device->GPUContext != NULL)
 	{
 		glfwMakeContextCurrent(Device->GPUContext); //Make the context current so we can read GPU values.
-		glfwWaitEvents(); //Process ANY events for the GPU Context.
+		glfwPollEvents(); //Process ANY events for the GPU Context.
 		glfwSetWindowShouldClose(Device->GPUContext, true); //Flag the GPUContext for deletion.
-		glfwWaitEvents(); //Process ANY events for the GPU Context.
+		glfwPollEvents(); //Process ANY events for the GPU Context.
 		glfwDestroyWindow(Device->GPUContext); //Delete GPUContext.
 		Device->GPUContext == NULL; //Set it to NULL so we can sort it out later.
 		CheckLogError(true, NULL, "AllocateGPUBuffer");

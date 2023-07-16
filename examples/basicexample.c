@@ -7,7 +7,7 @@ const char* ShaderCode = //Sample compute shader code for work.
 "layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;\n"
 "layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n" //Here we define our GPU Buffer A that we created using MemoryA memory buffer.
 "layout(std430, binding = 1) buffer TestName2 { float BufferB[]; };\n" //Here we define our GPU Buffer B that we created using MemoryB memory buffer.
-"layout(std430, binding = 2) buffer TestName3 { float BufferC[]; };\n" //Here we define our GPU Buffer B that we left NULL so it creates and empty buffer.
+"layout(std430, binding = 2) buffer TestName3 { float BufferC[]; };\n" //Here we define our GPU Buffer C that we left NULL so it creates and empty buffer.
 
 "unsigned int JobIndex = (gl_GlobalInvocationID.x * (gl_NumWorkGroups.y * gl_NumWorkGroups.z)) + (gl_GlobalInvocationID.y * gl_NumWorkGroups.z) + gl_GlobalInvocationID.z;\n" //A small piece of code that calculates where/which shader unit is at in the job/work count. (Array index essentially.)
 
@@ -60,7 +60,7 @@ int main()
 
 	if(!IsPepsi) //In-case the compilation didn't fail.
 	{
-		RunComputeProgram(Program, &GPUDevices[0], TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
+		RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD.
 
 		ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
 

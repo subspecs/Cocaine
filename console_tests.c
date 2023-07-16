@@ -60,12 +60,16 @@ int main()
 
 	if(!IsPepsi) //In-case the compilation didn't fail.
 	{
-		int* Limits = GetGPUDeviceLimits(&GPUDevices[0]);
+		printf("Run once..\n");
+		RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
 
-		RunComputeProgram(Program, Limits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
-
+		printf("Run twice..\n");
+		RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
+		
+		printf("Reading data..\n");
 		ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
 
+		printf("Printing data..\n");
 		int n = TestSize - 10;
 		while(n < TestSize)
 		{

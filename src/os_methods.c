@@ -6,16 +6,16 @@
 void InitTime();
 LARGE_INTEGER FPC; //Frequency Performance Counter.
 bool IsTimeMethodsInitialized;
-double RawTimeFrequency, MiliTimeFrequency, MicroTimeFrequency, NanoTimeFrequency;
+double RawTimeFrequency, MilliTimeFrequency, MicroTimeFrequency, NanoTimeFrequency;
 #endif
 
 //Internal Methods ==============================================================================================
 #if defined(Cocaine_Win_64) || defined(Cocaine_Win_32)
 //Timing Methods.
-void InitTime() { if(!IsTimeMethodsInitialized) { if (QueryPerformanceFrequency(&FPC)) { RawTimeFrequency = FPC.QuadPart; MiliTimeFrequency = FPC.QuadPart / 1000.0; MicroTimeFrequency = FPC.QuadPart / 1000000.0; NanoTimeFrequency = FPC.QuadPart / 1000000000.0; } else { RawTimeFrequency = 0; MiliTimeFrequency = 0; MicroTimeFrequency = 0; NanoTimeFrequency = 0; }; IsTimeMethodsInitialized = true; } }
+void InitTime() { if(!IsTimeMethodsInitialized) { if (QueryPerformanceFrequency(&FPC)) { RawTimeFrequency = FPC.QuadPart; MilliTimeFrequency = FPC.QuadPart / 1000.0; MicroTimeFrequency = FPC.QuadPart / 1000000.0; NanoTimeFrequency = FPC.QuadPart / 1000000000.0; } else { RawTimeFrequency = 0; MilliTimeFrequency = 0; MicroTimeFrequency = 0; NanoTimeFrequency = 0; }; IsTimeMethodsInitialized = true; } }
 long long GetCurrentTimestamp() { LARGE_INTEGER Counter; QueryPerformanceCounter(&Counter); return Counter.QuadPart; }
 long long GetTimestampSeconds(long long Timestamp) { return (long long)((double)Timestamp / RawTimeFrequency); }
-long long GetTimestampMiliseconds(long long Timestamp) { return (long long)((double)Timestamp / MiliTimeFrequency); }
+long long GetTimestampMilliseconds(long long Timestamp) { return (long long)((double)Timestamp / MilliTimeFrequency); }
 long long GetTimestampMicroseconds(long long Timestamp) { return (long long)((double)Timestamp / MicroTimeFrequency); }
 long long GetTimestampNanoseconds(long long Timestamp) { return (long long)((double)Timestamp / NanoTimeFrequency); }
 
@@ -27,7 +27,7 @@ void Win_HideWindowInTaskbar(void* win) { glfwHideWindow(win); SetWindowLong(glf
 void InitTime() { }
 long long GetCurrentTimestamp() { struct timespec Counter; clock_gettime(CLOCK_REALTIME, &Counter); return (Counter.tv_sec * 1000000000LL) + Counter.tv_nsec; }
 long long GetTimestampSeconds(long long Timestamp) { return (long long)((double)Timestamp / 1000000000.0); }
-long long GetTimestampMiliseconds(long long Timestamp) { return (long long)((double)Timestamp / 1000000.0); }
+long long GetTimestampMilliseconds(long long Timestamp) { return (long long)((double)Timestamp / 1000000.0); }
 long long GetTimestampMicroseconds(long long Timestamp) { return (long long)((double)Timestamp / 1000.0); }
 long long GetTimestampNanoseconds(long long Timestamp) { return Timestamp; }
 #endif

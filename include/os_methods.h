@@ -14,7 +14,7 @@ typedef unsigned char byte;
 
 //Function Pointers =============================================================================================
 void (*OnShaderCompileError)(const char* Error);
-void (*OnProgramRunError)(const char* Error);
+void (*OnProgramRunError)(const char* ErrorDesc);
 void (*OnGLFWError)(const char* ErrorName, const char* FunctionName, const char* ErrorDesc);
 
 
@@ -25,7 +25,8 @@ typedef struct Bit256Block { int i1, i2, i3, i4, i5, i6, i7, i8; } Bit256Block;
 //Internal Methods ==============================================================================================
 void InitTime();
 void Win_HideWindowInTaskbar(void* win);
-
+void CheckLogError(bool PrintError, const char* AppendCustomError, const char* FunctionName);
+void BlockCopy(void* Src, long long SrcOffset, void* Dest, long long DestOffset, long long Count);
 
 //Public Methods ================================================================================================
 
@@ -38,7 +39,7 @@ long long GetCurrentTimestamp();
 //Get the total amount of Seconds in given timestamp.
 long long GetTimestampSeconds(long long Timestamp);
 //Get the total amount of Miliseconds in given timestamp.
-long long GetTimestampMiliseconds(long long Timestamp);
+long long GetTimestampMilliseconds(long long Timestamp);
 //Get the total amount of Microseconds in given timestamp.
 long long GetTimestampMicroseconds(long long Timestamp);
 //Get the total amount of Nanoseconds in given timestamp.
@@ -51,10 +52,6 @@ void RegisterOnProgramRunErrorMethod(void* Method);
 //Registers the method callback to use when an shader compilation error occurs.
 void RegisterOnShaderCompileErrorMethod(void* Method);
 
-//Reads and logs errors in memory for later reading, optionally prints them.
-void CheckLogError(bool PrintError, const char* AppendCustomError, const char* FunctionName);
-//Perform a byte block copy from Src to Dest.
-void BlockCopy(void* Src, long long SrcOffset, void* Dest, long long DestOffset, long long Count);
 
 #ifdef __cplusplus
 }

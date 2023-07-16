@@ -28,12 +28,10 @@ void WriteToGPUBuffer(GPUBuffer* GPUBuffer, void* Buffer, long long GPUBufferOff
 //Compiles shader. NOTE: Only works in an active context.
 bool CompileProgram(const char* const* ShaderCode, unsigned int* OutProgram);
 //Load a ComputeProgram from memory.
-bool LoadComputeProgram(unsigned char* Buffer, int Count, GLuint* Program);
+bool LoadComputeProgram(unsigned char* Buffer, int Count, unsigned int* Program);
 //Save a ComputeProgram to memory.
 int SaveComputeProgram(unsigned int Program, unsigned char* Buffer);
 
-//Gets the condensed GPU device limitations.
-int* GetGPUDeviceLimits(GPUDevice* Device);
 //Binds the current GPU Device to the calling thread and makes the GPU context active on calling thread.
 void SetActiveGPUContext(GPUDevice* Device);
 //Will run the currently active Compute Program on the CURRENTLY ACTIVE GPU context on the CALLING THREAD.
