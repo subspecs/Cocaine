@@ -21,7 +21,7 @@ long long GetTimestampNanoseconds(long long Timestamp) { return (long long)((dou
 
 //Window Methods.
 void Win_HideWindowInTaskbar(void* win) { glfwHideWindow(win); SetWindowLong(glfwGetWin32Window(win), GWL_EXSTYLE, WS_EX_TOOLWINDOW); glfwShowWindow(win); }
-#elif
+#else
 //Timing Methods.
 #include <time.h>
 void InitTime() { }
@@ -77,10 +77,14 @@ void CheckLogError(bool PrintError, const char* AppendCustomError, const char* F
 	const char* GLError = GetCurrentGLFWErrorText(&ErrorDesc);
 	if(GLError != NULL) 
 	{
+		while(GLError != NULL)
+		{
 #if defined(DEBUG)
-		if(PrintError) { printf("GLFW Error in '%s' - %s: %s\n", FunctionName == NULL ? "" : FunctionName, GLError, ErrorDesc); }
+			if(PrintError) { printf("GLFW Error in '%s' - %s: %s\n", FunctionName == NULL ? "" : FunctionName, GLError, ErrorDesc); }
 #endif
-		if(OnGLFWError != NULL) { OnGLFWError(GLError, FunctionName, ErrorDesc); }
+			if(OnGLFWError != NULL) { OnGLFWError(GLError, FunctionName, ErrorDesc); }
+			GLError = GetCurrentGLFWErrorText(&ErrorDesc);
+		}
 	}
 	if (AppendCustomError != NULL) 
 	{ 

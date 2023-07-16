@@ -60,7 +60,9 @@ int main()
 
 	if(!IsPepsi) //In-case the compilation didn't fail.
 	{
-		RunComputeProgram(Program, &GPUDevices[0], TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
+		int* Limits = GetGPUDeviceLimits(&GPUDevices[0]);
+
+		RunComputeProgram(Program, Limits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
 
 		ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
 

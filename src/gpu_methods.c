@@ -2,6 +2,8 @@
 #include "../include/os_methods.h"
 #include "../include/gpu_methods.h"
 
+#include <string.h>
+
 //Variables(Private) ============================================================================================
 bool IsGladLoaded, IsInitialized;
 
@@ -89,9 +91,9 @@ int GetCurrentGPUDevices(GPUDevice** GPUDevices)
 			{
 				glfwMakeContextCurrent(Devices[n].GPUContext); //Make the context current so we can read GPU values.
 				Devices[n].DisplayName = (char*)glGetString(GL_RENDERER); //Get the actual GPU/Renderer name.
-				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &Devices[n].WorkGroupLimits[0]); //Get GPU die work group limits per X axis.
-				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &Devices[n].WorkGroupLimits[1]); //Get GPU die work group limits per Y axis.
-				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &Devices[n].WorkGroupLimits[2]); //Get GPU die work group limits per Z axis.
+				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &Devices[n].GPUDeviceLimits[0]); //Get GPU die work group limits per X axis.
+				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &Devices[n].GPUDeviceLimits[1]); //Get GPU die work group limits per Y axis.
+				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &Devices[n].GPUDeviceLimits[2]); //Get GPU die work group limits per Z axis.
 			}
 			else { CheckLogError(true, NULL, "GetCurrentGPUDevices"); char tmp[1024]; strcpy(tmp, "Could not create GPU device context for: "); strcpy(tmp, glfwGetMonitorName(GPUMonitors[n])); CheckLogError(true, tmp, "GetCurrentGPUDevices"); GPUCount--; n++; continue;} //Report and move on if any issues arrise.
 

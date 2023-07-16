@@ -32,10 +32,12 @@ bool LoadComputeProgram(unsigned char* Buffer, int Count, GLuint* Program);
 //Save a ComputeProgram to memory.
 int SaveComputeProgram(unsigned int Program, unsigned char* Buffer);
 
+//Gets the condensed GPU device limitations.
+int* GetGPUDeviceLimits(GPUDevice* Device);
 //Binds the current GPU Device to the calling thread and makes the GPU context active on calling thread.
 void SetActiveGPUContext(GPUDevice* Device);
-//Will run the currently active Compute Program on the currently active GPU context on the calling thread. WorkGroupLimits is stored 
-bool RunComputeProgram(unsigned int Program, GPUDevice* Device, long long ProcessCount, bool PreciseCycleCount);
+//Will run the currently active Compute Program on the CURRENTLY ACTIVE GPU context on the CALLING THREAD.
+bool RunComputeProgram(unsigned int Program, int* GPUDeviceLimits, long long ProcessCount, bool PreciseCycleCount);
 
 #ifdef __cplusplus
 }

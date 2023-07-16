@@ -2,7 +2,7 @@
 #include "os_methods.h"
 
 //Structs =======================================================================================================
-typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; int WorkGroupLimits[3]; } GPUDevice; //A simple holder for a GPU device.
+typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; int GPUDeviceLimits[3]; } GPUDevice; //A simple holder for a GPU device.
 
 //Variables(Private) ============================================================================================
 int GPUCount;
@@ -29,7 +29,6 @@ void ReleaseResources();
 void CreateGPUContext(GPUDevice* Device);
 //Disposes the GPU context on the calling thread.
 void DisposeGPUContext(GPUDevice* Device);
-
 
 //Gets the Raw GPUDevices pointer.
 int GetRawGPUDevices(GPUDevice** OutDevices);

@@ -37,7 +37,13 @@ void DeallocateGPUBuffer(GPUBuffer* GPUBuffer)
 void ReadFromGPUBuffer(GPUBuffer* GPUBuffer, void* Buffer, long long GPUBufferOffset,  long long Count)
 {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, GPUBuffer->Buffer); //Bind empty buffer to current GPU context.
+#if !defined(Cocaine_GLES)
 	glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, (GLintptr)GPUBufferOffset, (GLsizeiptr)Count, Buffer);
+#else
+	void* tmp = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, GPUBufferOffset, Count, GL_MAP_READ_BIT);
+	BlockCopy(tmp, 0, Buffer, 0, Count);
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+#endif
 	CheckLogError(true, NULL, "ReadFromGPUBuffer");
 }
 //Write bytes to a GPU buffer on the currently active GPU context on the calling thread. (WARNING: If the buffer was NOT made on the current GPU, it WILL re-create/bind it there.)
@@ -117,6 +123,11 @@ int SaveComputeProgram(unsigned int Program, unsigned char* Buffer)
 	}
 }
 
+//Gets the condensed GPU device limitations.
+int* GetGPUDeviceLimits(GPUDevice* Device)
+{
+	return Device->GPUDeviceLimits;
+}
 //Binds the current GPU Device to the calling thread and makes the GPU context active on calling thread.
 void SetActiveGPUContext(GPUDevice* Device)
 {
@@ -124,8 +135,8 @@ void SetActiveGPUContext(GPUDevice* Device)
 	glfwMakeContextCurrent(Device->GPUContext); //Make this GPU the current threads GPU context.
 	CheckLogError(true, NULL, "SetActiveGPUContext"); //Error Check.
 }
-//Will run the currently active Compute Program on the CURRENTLY ACTIVE GPU context on the CALLING THREAD. Note: The 'Device' param is only used for limit calcualtions and NOT for the actual compute. (In-case you thought you can slap a random GPU context here.)
-bool RunComputeProgram(unsigned int Program, GPUDevice* Device, long long ProcessCount, bool PreciseCycleCount)
+//Will run the currently active Compute Program on the CURRENTLY ACTIVE GPU context on the CALLING THREAD.
+bool RunComputeProgram(unsigned int Program, int* GPUDeviceLimits, long long ProcessCount, bool PreciseCycleCount)
 {
 	glLinkProgram(Program); //Link shader program to the current GPU context.
 	glUseProgram(Program); //Register the shader program for use with the current GPU context.
@@ -133,15 +144,15 @@ bool RunComputeProgram(unsigned int Program, GPUDevice* Device, long long Proces
 
 	bool AllGood = true; //A simple check if all is good, no errors etc.
 	long long JobCountCBRT = ceil(cbrt(ProcessCount)); //The the cube root of ProcessCount.
-	if(Device->WorkGroupLimits[0] < ProcessCount && !PreciseCycleCount && JobCountCBRT > 1) 
+	if(GPUDeviceLimits[0] < ProcessCount && !PreciseCycleCount && JobCountCBRT > 1) 
 	{ 
-		if(Device->WorkGroupLimits[0] >= JobCountCBRT && Device->WorkGroupLimits[1] >= JobCountCBRT && Device->WorkGroupLimits[2] >= JobCountCBRT) 
+		if(GPUDeviceLimits[0] >= JobCountCBRT && GPUDeviceLimits[1] >= JobCountCBRT && GPUDeviceLimits[2] >= JobCountCBRT) 
 		{ 
 			glDispatchCompute(JobCountCBRT, JobCountCBRT, JobCountCBRT); //Execute work.
 		}
 		else { AllGood = false; CheckLogError(true, "Work Group Count higher than supported! (WorkGroupPerXYZCount = cuberoot(ProcessCount))", "RunComputeProgram"); }
 	} 
-	else if(Device->WorkGroupLimits[0] >= ProcessCount) { glDispatchCompute(ProcessCount, 1, 1); } else { CheckLogError(true, "WorkGroupX < ProcessCount", "RunComputeProgram"); } //Execute work.
+	else if(GPUDeviceLimits[0] >= ProcessCount) { glDispatchCompute(ProcessCount, 1, 1); } else { CheckLogError(true, "WorkGroupX < ProcessCount", "RunComputeProgram"); } //Execute work.
 	CheckLogError(true, NULL, "RunComputeProgram"); //Error Check.
 
 	int LogSize = 0; glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &LogSize); 
