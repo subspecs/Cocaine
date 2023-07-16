@@ -22,7 +22,7 @@ There are also comments on mostly everything**.<br><br>
 For a simple multi-platform solution, there is a [Cocaine .NET]() wrapper.(COMING SOON!)<br>
 For what I am using, here's an windows x64 example:<br>
 1) Look at the example [here](https://github.com/subspecs/Cocaine/blob/master/examples/basicexample.c).
-2) a) If you're going to link a **static library(.lib/.a)** then the only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
+2) a) If you're going to link a **static library(.lib/.a)** of **libCocaine.a** then the only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
 b) If you're going to link/load against a **dynamic library(.dll)**, then you only need the **Cocaine.dll** and **glfw3.dll** files in the same directory as the executable.<br>
 
 **That's it!**<br><br>
@@ -30,7 +30,7 @@ b) If you're going to link/load against a **dynamic library(.dll)**, then you on
 ### So, how does one compile it?
 Personally I use windows 10, so I compile this with mingw64.<br>
 Cocaine uses [GLFW](https://github.com/glfw/glfw) under the hood, and the basic libglfw3dll.a and glfw3.dll for windows x64 are already included in the source.<br><br>
-So in short, all* dependencies(GLFW) are already present, one only needs to compile the code. (You sill need to alter the GLAD header file if switching to ES 3.1, for now.)<br>
+So in short, all* dependencies(GLFW) are already present, one only needs to compile the code.<br>
 <sub>*If you need other platfroms, compile/get them from [GLFW](https://github.com/glfw/glfw) repo yourself, or pray for a release build.</sub><br><br>
 You can check the latest compile arguments I use [here](https://github.com/subspecs/Cocaine/blob/master/-%20CompileGLLib.bat), or look at these basic arguments(swap **Cocaine_Win_64** for anything you're [targeting](https://github.com/subspecs/Cocaine/blob/master/include/platform.h)) here:
 ```
