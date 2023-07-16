@@ -28,9 +28,9 @@ There are also comments on mostly everything**.
 
 ### So, how does one compile it?
 Personally I use windows 10, so I compile this with mingw64.<br>
-Cocaine uses [GLFW](https://github.com/glfw/glfw) under the hood, and the basic libglfw3dll.a and glfw3.dll for windows x64 are already included in the source.<br>
+Cocaine uses [GLFW](https://github.com/glfw/glfw) under the hood, and the basic libglfw3dll.a and glfw3.dll for windows x64 are already included in the source.<br><br>
 So in short, all* dependencies(GLFW) are already present, one only needs to compile the code. (You sill need to alter the GLAD header file if switching to ES 3.1, for now.)<br>
-<sub>*If you need other platfroms, compile/get them from [GLFW](https://github.com/glfw/glfw) repo yourself, or pray for a release build.</sub><br>
+<sub>*If you need other platfroms, compile/get them from [GLFW](https://github.com/glfw/glfw) repo yourself, or pray for a release build.</sub><br><br>
 You can check the latest compile arguments I use [here](https://github.com/subspecs/Cocaine/blob/master/-%20CompileGLLib.bat), or look at these basic arguments(swap **Cocaine_Win_64** for anything you're [targeting](https://github.com/subspecs/Cocaine/blob/master/include/platform.h)) here:
 ```
 gcc -DCocaine_Win_64 -DCocaineCompile "src/glad/gl.c" "src/os_methods.c" "src/gpu_methods.c" "src/api_methods.c" -L "lib/Win/x64" -lglfw3dll -fPIC -shared -O3 -o "outputs/Cocaine.dll"
