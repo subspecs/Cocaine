@@ -13,7 +13,10 @@ And you know what's the best part of it? You can even let grandma do a line.
 The library uses ONLY the default OpenGL 4.3 or Open GL ES 3.1 features with no extensions.<br>
 Meaning this thing works on toasters/solitaire/potato/trashcan machines that were made from 2010* and up.
 <br>
-<sub>*Some SOCs and GPUs like ATI/AMD/Intel didn't bother to update their API levels, tho a very small portion of them.</sub>
+<sub>*Some SOCs and GPUs like ATI/AMD/Intel didn't bother to update their API levels, tho a very small portion of them.</sub><br>
+
+For what **methods** are available, their **documentation** and **signatures** are available at the [wiki](https://github.com/subspecs/Cocaine/wiki/API-Documentation).<br>
+There are also comments on mostly everything**.<br><br>
 
 ### So, how does one use it?
 For a simple multi-platform solution, there is a [Cocaine .NET]() wrapper.(COMING SOON!)<br>
@@ -22,9 +25,7 @@ For what I am using, here's an windows x64 example:<br>
 2) a) If you're going to link a **static library(.lib/.a)** then the only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
 b) If you're going to link/load against a **dynamic library(.dll)**, then you only need the **Cocaine.dll** and **glfw3.dll** files in the same directory as the executable.<br>
 
-**That's it!**<br>
-For what **methods** are available, their **documentation** and **signatures** are available at the wiki(SOON).<br>
-There are also comments on mostly everything**.
+**That's it!**<br><br>
 
 ### So, how does one compile it?
 Personally I use windows 10, so I compile this with mingw64.<br>
