@@ -139,7 +139,6 @@ bool RunComputeProgram(unsigned int Program, int* GPUDeviceLimits, long long Pro
 
 	bool AllGood = true; //A simple check if all is good, no errors etc.
 	long long JobCountCBRT = ceil(cbrt(ProcessCount)); //The the cube root of ProcessCount.
-	printf("Running job....\n");
 	if(GPUDeviceLimits[0] < ProcessCount && !PreciseCycleCount && JobCountCBRT > 1) 
 	{ 
 		if(GPUDeviceLimits[0] >= JobCountCBRT && GPUDeviceLimits[1] >= JobCountCBRT && GPUDeviceLimits[2] >= JobCountCBRT) 
@@ -149,10 +148,8 @@ bool RunComputeProgram(unsigned int Program, int* GPUDeviceLimits, long long Pro
 		else { AllGood = false; CheckLogError(true, "Work Group Count higher than supported! (WorkGroupPerXYZCount = cuberoot(ProcessCount))", "RunComputeProgram"); }
 	} 
 	else if(GPUDeviceLimits[0] >= ProcessCount) { glDispatchCompute(ProcessCount, 1, 1); } else { CheckLogError(true, "WorkGroupX < ProcessCount", "RunComputeProgram"); } //Execute work.
-	printf("Done Running job!\n");
 	CheckLogError(true, NULL, "RunComputeProgram"); //Error Check.
 
-	printf("Processing logs...\n");
 	int LogSize = 0; glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &LogSize); 
 	if(LogSize > 0)
 	{
@@ -167,12 +164,9 @@ bool RunComputeProgram(unsigned int Program, int* GPUDeviceLimits, long long Pro
 #endif
 		free(LogMessage);
 	}
-	printf("Done Processing logs!\n");
 
 	glMemoryBarrier(GL_ALL_BARRIER_BITS); //Wait for GPU to complete task;
-	printf("Barrier done!\n");
 	glfwPollEvents(); //Wait for window events to process, otherwise OS will think it's dead weight.
-	printf("Events done!\n");
 	CheckLogError(true, NULL, "RunComputeProgram"); //Error Check.
 	return AllGood;
 }

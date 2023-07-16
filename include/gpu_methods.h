@@ -4,6 +4,7 @@
 //Structs =======================================================================================================
 typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; int GPUDeviceLimits[3]; } GPUDevice; //A simple holder for a GPU device.
 
+
 //Variables(Private) ============================================================================================
 int GPUCount;
 GPUDevice* GPUDevices;
@@ -26,7 +27,7 @@ void RefreshGPUList();
 void ReleaseResources();
 
 //Initializes the GPU context on the calling thread.
-void CreateGPUContext(GPUDevice* Device);
+bool CreateGPUContext(GPUDevice* Device);
 //Disposes the GPU context on the calling thread.
 void DisposeGPUContext(GPUDevice* Device);
 

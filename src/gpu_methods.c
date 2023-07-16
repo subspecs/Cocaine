@@ -181,16 +181,17 @@ void RefreshGPUList()
 }
 
 //Initializes the GPU context on the MAIN thread.
-void CreateGPUContext(GPUDevice* Device)
+bool CreateGPUContext(GPUDevice* Device)
 {
 	if(Device->GPUContext == NULL)
 	{
 		if(!CreateContext(Device->GPUMonitor, &Device->GPUContext)) //Initialize a device context on the GPU that's connecte to the given monitor.
 		{
-			char tmp[1024]; strcpy(tmp, "Could not create GPU device context for: "); strcpy(tmp, glfwGetMonitorName(Device->GPUMonitor)); CheckLogError(true, tmp, "CreateGPUContext"); //Report and move on if any issues arrise.
+			char tmp[1024]; strcpy(tmp, "Could not create GPU device context for: "); strcpy(tmp, glfwGetMonitorName(Device->GPUMonitor)); CheckLogError(true, tmp, "CreateGPUContext"); return false; //Report and move on if any issues arrise.
 		}
+		return true;
 	}
-	CheckLogError(true, NULL, "CreateGPUContext"); 
+	CheckLogError(true, NULL, "CreateGPUContext"); return false;
 }
 //Disposes the GPU context on the MAIN thread.
 void DisposeGPUContext(GPUDevice* Device)
