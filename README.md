@@ -19,7 +19,7 @@ For what **methods** are available, their **documentation** and **signatures** a
 There are also comments on mostly everything**.<br><br>
 
 ### So, how does one use it?
-For a simple multi-platform solution, there is a [Cocaine .NET]() wrapper.(COMING SOON!)<br>
+For a simple multi-platform solution, there is a [Cocaine .NET](https://github.com/subspecs/CocaineNET) wrapper in the works.<br>
 For what I am using, here's an windows x64 example:<br>
 1) Look at the example [here](https://github.com/subspecs/Cocaine/blob/master/examples/basicexample.c).
 2) a) If you're going to link a **static library(.lib/.a)** of **libCocaine.a** then the only headers you'll need are '**api_methods.h**', '**gpu_methods.h**' and '**os_methods.h**'.<br>
