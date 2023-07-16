@@ -15,7 +15,7 @@ Meaning this thing works on toasters/solitaire/potato/trashcan machines that wer
 <br>
 <sub>*Some SOCs and GPUs like ATI/AMD/Intel didn't bother to update their API levels, tho a very small portion of them.</sub><br>
 
-For what **methods** are available, their **documentation** and **signatures** are available at the wiki(SOON).<br>
+For what **methods** are available, their **documentation** and **signatures** are available at the [wiki](https://github.com/subspecs/Cocaine/wiki/API-Documentation).<br>
 There are also comments on mostly everything**.<br><br>
 
 ### So, how does one use it?
