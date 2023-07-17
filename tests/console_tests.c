@@ -1,6 +1,6 @@
-#include "include/api_methods.h"
-#include "include/gpu_methods.h"
-#include "include/os_methods.h"
+#include "../include/api_methods.h"
+#include "../include/gpu_methods.h"
+#include "../include/os_methods.h"
 
 const char* ShaderCode = //Sample shader code for work.
 "#version 430\n"
@@ -13,7 +13,7 @@ const char* ShaderCode = //Sample shader code for work.
 
 "void main()\n"
 "{\n"
-"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n"
+//"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n"
 "}\n";
 
 long long TestSize = 550000000; //The amount of variables to create.
@@ -55,7 +55,7 @@ int main()
 		printf("Send buffers to gpu... "); long long Start3 = GetCurrentTimestamp();
 		GPUBuffer BufferA = AllocateGPUBuffer(NoReadWrite, 0, MemoryA, TestSizeBufferByteCount); //Create a GPU buffer and write our memory buffer A contents to it.
 		GPUBuffer BufferB = AllocateGPUBuffer(NoReadWrite, 1, MemoryB, TestSizeBufferByteCount); //Create a GPU buffer and write our memory buffer B contents to it.
-		GPUBuffer BufferC = AllocateGPUBuffer(Read, 2, NULL, TestSizeBufferByteCount); //Create a GPU buffer and and leave the buffer input NULL, this signals the GPU that you just want to create an empty GPU buffer on it. (Saves time)
+		GPUBuffer BufferC = AllocateGPUBuffer(FastRead, 2, NULL, TestSizeBufferByteCount); //Create a GPU buffer and and leave the buffer input NULL, this signals the GPU that you just want to create an empty GPU buffer on it. (Saves time)
 		long long End3 = GetCurrentTimestamp(); printf("%lldms\n", GetTimestampMilliseconds(End3 - Start3));
 
 		bool IsPepsi = false; GLuint Program;
@@ -72,11 +72,15 @@ int main()
 
 			printf("Running programm #2... "); long long Start5 = GetCurrentTimestamp();
 			RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD. ex: If you run a program on a GPU context that's owned by thread B ON thread A(which owns a different context per say), you'll have a bad bad time.
-			long long End5 = GetCurrentTimestamp(); printf("%lldms\n", GetTimestampMilliseconds(End5 - Start5));
+			long long End5 = GetCurrentTimestamp(); printf("%lldns\n", GetTimestampNanoseconds(End5 - Start5));
 
-			printf("Reading GPU into RAM memory... "); long long Start6 = GetCurrentTimestamp();
+			printf("Reading GPU into RAM memory#1... "); long long Start6 = GetCurrentTimestamp();
 			ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
 			long long End6 = GetCurrentTimestamp(); printf("%lldms\n", GetTimestampMilliseconds(End6 - Start6));
+
+			printf("Reading GPU into RAM memory#2... "); long long Start8 = GetCurrentTimestamp();
+			ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
+			long long End8 = GetCurrentTimestamp(); printf("%lldms\n", GetTimestampMilliseconds(End8 - Start8));
 
 			long long Start7 = GetCurrentTimestamp();
 			int n = TestSize - 10;

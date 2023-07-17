@@ -72,6 +72,7 @@ char** GetGPUMonitors(void** GPUContexts, const int Count)
 	{ 
 		glfwMakeContextCurrent(GPUContexts[n]); //Hopyfully the GPU ISN'T being used by the API right now, since we switch it's context to the CALLING thread.
 		const char* GPUName = glGetString(GL_RENDERER); //Actually get the GPU's/Renderes name.
+
 		Names[n] = (char*)(GPUName == NULL ? "Unknown" : GPUName); //Does a sanity check on the name, since some crappy emulators/GPU's might not have this name stored.
 		n++; 
 	}
@@ -96,7 +97,15 @@ int GetCurrentGPUDevices(GPUDevice** GPUDevices)
 			if(CreateContext(GPUMonitors[n], &Devices[n].GPUContext)) //Initialize a device context on the GPU that's connecte to the given monitor.
 			{
 				glfwMakeContextCurrent(Devices[n].GPUContext); //Make the context current so we can read GPU values.
+
 				Devices[n].DisplayName = (char*)glGetString(GL_RENDERER); //Get the actual GPU/Renderer name.
+				char* DName = (char*)malloc(strlen(Devices[n].DisplayName)+1); strcpy(DName, Devices[n].DisplayName);
+				Devices[n].DisplayName = DName;
+
+				Devices[n].MonitorName = (char*)glfwGetMonitorName(GPUMonitors[n]); //Get the monitor name that's connected to the GPU.
+				char* MName = (char*)malloc(strlen(Devices[n].MonitorName)+1); strcpy(MName, Devices[n].MonitorName);
+				Devices[n].MonitorName = MName;
+			
 				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &Devices[n].GPUDeviceLimits[0]); //Get GPU die work group limits per X axis.
 				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &Devices[n].GPUDeviceLimits[1]); //Get GPU die work group limits per Y axis.
 				glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &Devices[n].GPUDeviceLimits[2]); //Get GPU die work group limits per Z axis.

@@ -2,7 +2,7 @@
 #include "os_methods.h"
 
 //Structs =======================================================================================================
-typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; int GPUDeviceLimits[3]; } GPUDevice; //A simple holder for a GPU device.
+typedef struct GPUDevice { void* GPUContext; void* GPUMonitor; char* DisplayName; char* MonitorName; int GPUDeviceLimits[3]; } GPUDevice; //A simple holder for a GPU device.
 
 
 //Variables(Private) ============================================================================================
