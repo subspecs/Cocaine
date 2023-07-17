@@ -35,7 +35,7 @@ int main()
 		int i = 0;
 		while(i < GPUCount)
 		{
-		printf("GPU[%d]: %s\n", i, ComputeDevices[i].DisplayName); //Print out our GPU names because why not?
+			printf("GPU[%d]: %s\n", i, ComputeDevices[i].DisplayName); //Print out our GPU names because why not?
 			i++;
 		}
 
