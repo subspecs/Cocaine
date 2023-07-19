@@ -26,7 +26,7 @@ void ReadFromGPUBuffer(GPUBuffer* GPUBuffer, void* Buffer, long long GPUBufferOf
 void WriteToGPUBuffer(GPUBuffer* GPUBuffer, void* Buffer, long long GPUBufferOffset,  long long Count);
 
 //Compiles shader. NOTE: Only works in an active context.
-bool CompileProgram(const char* const* ShaderCode, unsigned int* OutProgram);
+bool CompileProgram(char* ShaderCode, unsigned int* OutProgram);
 //Load a ComputeProgram from memory.
 bool LoadComputeProgram(unsigned char* Buffer, int Count, unsigned int* Program);
 //Save a ComputeProgram to memory.

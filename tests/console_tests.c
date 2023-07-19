@@ -2,7 +2,7 @@
 #include "../include/gpu_methods.h"
 #include "../include/os_methods.h"
 
-const char* ShaderCode = //Sample shader code for work.
+char* ShaderCode = //Sample shader code for work.
 "#version 430\n"
 "layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;\n"
 "layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n"
@@ -13,7 +13,7 @@ const char* ShaderCode = //Sample shader code for work.
 
 "void main()\n"
 "{\n"
-//"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n"
+"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n"
 "}\n";
 
 long long TestSize = 550000000; //The amount of variables to create.
@@ -59,7 +59,7 @@ int main()
 		long long End3 = GetCurrentTimestamp(); printf("%lldms\n", GetTimestampMilliseconds(End3 - Start3));
 
 		bool IsPepsi = false; GLuint Program;
-		if (!CompileProgram(&ShaderCode, &Program)) //Compiles shader code that a top this file.
+		if (!CompileProgram(ShaderCode, &Program)) //Compiles shader code that a top this file.
 		{
 			IsPepsi = true; //If compilation failed. (There are error/method callbacks that you'll be able to use, too lazy to write here.)
 		}

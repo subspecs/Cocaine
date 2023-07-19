@@ -55,10 +55,11 @@ void WriteToGPUBuffer(GPUBuffer* GPUBuffer, void* Buffer, long long GPUBufferOff
 }
 
 //Compiles shader and returns compile status and error message if any. NOTE: Only works in an active context.
-bool CompileProgram(const char* const* ShaderCode, GLuint* OutProgram)
+bool CompileProgram(char* ShaderCode, GLuint* OutProgram)
 {
 	GLuint Shader = glCreateShader(GL_COMPUTE_SHADER); //Create an empty shader.
-	glShaderSource(Shader, 1, ShaderCode, NULL); glCompileShader(Shader); //Bind the shader code to the shader object and compile it.
+	//glShaderSource(Shader, 1, ShaderCode, NULL); glCompileShader(Shader); //Bind the shader code to the shader object and compile it. const char* const*
+	glShaderSource(Shader, 1, (const char**)&ShaderCode, NULL); glCompileShader(Shader); //Bind the shader code to the shader object and compile it.
 	bool IsCompiled = false; glGetShaderiv(Shader, GL_COMPILE_STATUS, &IsCompiled); //Retreive the status of the shaders compilation.
 	if(!IsCompiled)
 	{
@@ -96,7 +97,7 @@ bool LoadComputeProgram(unsigned char* Buffer, int Count, unsigned int* Program)
 	else
 	{
 		GLuint Shader;
-		if(!CompileProgram((const char**)(Buffer + 1), Program))
+		if(!CompileProgram((Buffer + 1), Program))
 		{
 			//ERROR.
 			return false;
