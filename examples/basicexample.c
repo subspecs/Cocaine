@@ -1,8 +1,8 @@
-#include "include/api_methods.h"
-#include "include/gpu_methods.h"
-#include "include/os_methods.h"
+#include "../include/api_methods.h"
+#include "../include/gpu_methods.h"
+#include "../include/os_methods.h"
 
-const char* ShaderCode = //Sample compute shader code for work.
+char* ShaderCode = //Sample compute shader code for work.
 "#version 430\n"
 "layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;\n"
 "layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n" //Here we define our GPU Buffer A that we created using MemoryA memory buffer.
@@ -13,13 +13,13 @@ const char* ShaderCode = //Sample compute shader code for work.
 
 "void main()\n"
 "{\n"
-"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n" //Meth.
+"	BufferC[JobIndex] = BufferA[JobIndex] + BufferB[JobIndex];\n" //Math.
 "}\n";
 
-long long TestSize = 550000000; //The amount of variables to create. (Make sure you have 3x(4 bytes x TestSize) amount of RAM and GPU VRAM.)
-long long TestSizeBufferByteCount; //The amount of bytes these variable will consume.
+long long TestSize = 100; //The amount of variables to create. (Make sure you have 3x(4 bytes x TestSize) amount of RAM and GPU VRAM.)
+long long TestSizeBufferByteCount; //Calculated the amount of bytes these variable will consume.
 
-void SetBufferValues(float* Buffer, int Length, float Value) { int n = 0; while(n < Length) { Buffer[n] = Value; n++; } }
+void SetBufferValues(float* Buffer, int Length, float Value) { int n = 0; while(n < Length) { Buffer[n] = Value; n++; } } //A function that helps us set our values.
 
 int main()
 {
@@ -28,9 +28,9 @@ int main()
 	GPUDevice* ComputeDevices = NULL;
 	int DeviceCount = GetRawGPUDevices(&ComputeDevices); //Get the GPUs and their count that Cocaine has detected.
 
-	if(CreateGPUContext(&ComputeDevices[0])); //Take the first GPU and create a context for it.
+	if(CreateGPUContext(&ComputeDevices[0])) //Take the first GPU and create a context for it.
 	{
-		SetActiveGPUContext(&ComputeDevices[0]); //Make the current GPU context active on the calling thread.
+		SetActiveGPUContext(&ComputeDevices[0]); //Make the current GPU context is active on the calling thread.
 
 		int i = 0;
 		while(i < GPUCount)
@@ -39,7 +39,7 @@ int main()
 			i++;
 		}
 
-		TestSizeBufferByteCount = TestSize * sizeof(float); //Calculate the byte count our variables are going to consume. (Both on RAM and GPU VRAM)
+		TestSizeBufferByteCount = TestSize * sizeof(float); //Calculate the byte count each of our variables are going to consume. (Both on RAM and GPU VRAM)
 
 		void* MemoryA = malloc(TestSizeBufferByteCount); //Create the A empty memory buffer of where we write values to be calculated.
 		void* MemoryB = malloc(TestSizeBufferByteCount); //Create the B empty memory buffer of where we write values to be calculated.
@@ -53,24 +53,29 @@ int main()
 		GPUBuffer BufferC = AllocateGPUBuffer(Read, 2, NULL, TestSizeBufferByteCount); //Create a GPU buffer and and leave the buffer input NULL, this signals the GPU that you just want to create an empty GPU buffer on it. (Saves time)
 
 		bool IsPepsi = false; GLuint Program;
-		if (!CompileProgram(&ShaderCode, &Program)) //Compiles shader code that a top this file.
+		if (!CompileProgram(ShaderCode, &Program)) //Compiles shader code that is atop our code.
 		{
-			IsPepsi = true; //If compilation failed. (There are error/method callbacks that you'll be able to use, too lazy to write here.)
+			IsPepsi = true; //If compilation failed. 
+			CheckLogError(true, NULL, "main"); //Error Check why compilation failed.
 		}
 
 		if(!IsPepsi) //In-case the compilation didn't fail.
 		{
-			RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false); //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD.
-
-			ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
-
-			int n = TestSize - 10;
-			while(n < TestSize)
+			if(RunComputeProgram(Program, GPUDevices[0].GPUDeviceLimits, TestSize, false)) //We run our compiled program on the CURRENTLY ACTIVE GPU on the CURRENTLY ACTIVE THREAD.
 			{
-				printf("Output[%d]: %f\n", n, ((float*)MemoryC)[n]); //For kicks we print out the result of the last 10 jobs completed.
-				n++;
+				ReadFromGPUBuffer(&BufferC, MemoryC, 0, TestSizeBufferByteCount); //When done, we'd like to read the results from GPU buffer back to our memory buffer. (BufferC => MemoryC)
+
+				int n = TestSize - 10;
+				while(n < TestSize)
+				{
+					printf("Output[%d]: %f\n", n, ((float*)MemoryC)[n]); //For kicks we print out the result of the last 10 jobs completed.
+					n++;
+				}
 			}
+			else { CheckLogError(true, NULL, "main"); } //Error Check why program run failed.
 		}
 	}
+	else { CheckLogError(true, NULL, "main"); }  //Error Check why creating GPU context failed.
+
 	return 0;
 }
