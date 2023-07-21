@@ -31,8 +31,8 @@ If <ins>compiling for other platforms</ins>, you just need the **libCocaine.(.so
 #include "../include/gpu_methods.h"
 #include "../include/os_methods.h"
 
-char* ShaderCode = //Sample compute shader code for work.
-"#version 430\n"
+char* ShaderCode = //Sample compute shader code for work..
+"#version 430\n"   //GLSL(version 430) compatible code
 "layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;\n"
 "layout(std430, binding = 0) buffer TestName1 { float BufferA[]; };\n" //Here we define our GPU Buffer A that we created using MemoryA memory buffer.
 "layout(std430, binding = 1) buffer TestName2 { float BufferB[]; };\n" //Here we define our GPU Buffer B that we created using MemoryB memory buffer.
